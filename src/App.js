@@ -1,21 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Calendar, Clock, Heart, MessageCircle, AlertTriangle, Zap, Loader2 } from 'lucide-react';
 
-// API Configuration
-const API_BASE_URL = 'http://localhost:5000/api';
+// API Configuration - Updated for proper environment detection
+const API_BASE_URL = process.env.NODE_ENV === "production"
+    ? "https://pet-tracker-backend-f1wx.onrender.com"
+    : "http://localhost:5000";
 
-// API Service Functions
+// API Service Functions - Fixed with /api prefix
 const apiService = {
   // Get all activities and current pet
   async getActivities() {
-    const response = await fetch(`${API_BASE_URL}/activities`);
+    const response = await fetch(`${API_BASE_URL}/api/activities`);
     if (!response.ok) throw new Error('Failed to fetch activities');
     return await response.json();
   },
 
   // Add new activity
   async addActivity(activityData) {
-    const response = await fetch(`${API_BASE_URL}/activities`, {
+    const response = await fetch(`${API_BASE_URL}/api/activities`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -31,21 +33,21 @@ const apiService = {
 
   // Get today's summary
   async getSummary() {
-    const response = await fetch(`${API_BASE_URL}/summary`);
+    const response = await fetch(`${API_BASE_URL}/api/summary`);
     if (!response.ok) throw new Error('Failed to fetch summary');
     return await response.json();
   },
 
   // Check walk reminder
   async getReminder() {
-    const response = await fetch(`${API_BASE_URL}/reminder`);
+    const response = await fetch(`${API_BASE_URL}/api/reminder`);
     if (!response.ok) throw new Error('Failed to check reminder');
     return await response.json();
   },
 
   // Send chat message
   async sendChatMessage(message) {
-    const response = await fetch(`${API_BASE_URL}/chat`, {
+    const response = await fetch(`${API_BASE_URL}/api/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -58,14 +60,14 @@ const apiService = {
 
   // Get chat history
   async getChatHistory() {
-    const response = await fetch(`${API_BASE_URL}/chat`);
+    const response = await fetch(`${API_BASE_URL}/api/chat`);
     if (!response.ok) throw new Error('Failed to fetch chat history');
     return await response.json();
   },
 
   // Delete activity
   async deleteActivity(id) {
-    const response = await fetch(`${API_BASE_URL}/activities/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/api/activities/${id}`, {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete activity');
@@ -112,6 +114,7 @@ const PetActivityTracker = () => {
   const loadData = useCallback(async () => {
     try {
       setLoading(prev => ({ ...prev, activities: true, summary: true }));
+      setError(''); // Clear any previous errors
       
       // Load activities and summary in parallel
       const [activitiesResult, summaryResult] = await Promise.all([
@@ -128,7 +131,7 @@ const PetActivityTracker = () => {
       
     } catch (err) {
       console.error('Error loading data:', err);
-      setError('Failed to load data. Make sure the server is running on port 5000.');
+      setError(`Failed to connect to server. Please ensure the backend is running on ${API_BASE_URL}`);
     } finally {
       setLoading(prev => ({ ...prev, activities: false, summary: false }));
     }
@@ -142,6 +145,7 @@ const PetActivityTracker = () => {
       setReminderMessage(result.data.message);
     } catch (err) {
       console.error('Error checking reminder:', err);
+      // Don't show error for reminder check failures
     }
   }, []);
 
