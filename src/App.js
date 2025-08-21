@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Calendar, Clock, Heart, MessageCircle, AlertTriangle, Zap, Loader2 } from 'lucide-react';
+import { Calendar, Clock, Heart, MessageCircle, AlertTriangle, Zap, Loader2, Trash2, X } from 'lucide-react';
 
 // API Configuration - Updated for proper environment detection
 const API_BASE_URL = process.env.NODE_ENV === "production"
@@ -213,7 +213,55 @@ const PetActivityTracker = () => {
     }
   };
 
-  // Handle chat
+  // Handle activity deletion
+  const handleDeleteActivity = async (activityId) => {
+    if (!window.confirm('Are you sure you want to delete this activity?')) {
+      return;
+    }
+    
+    try {
+      setLoading(prev => ({ ...prev, activities: true }));
+      await apiService.deleteActivity(activityId);
+      
+      // Reload data after deletion
+      await loadData();
+      await checkReminder();
+      
+    } catch (err) {
+      console.error('Error deleting activity:', err);
+      setError(err.message);
+    } finally {
+      setLoading(prev => ({ ...prev, activities: false }));
+    }
+  };
+
+  // Clear all activities
+  const handleClearAllActivities = async () => {
+    if (!window.confirm('Are you sure you want to clear ALL activities? This cannot be undone.')) {
+      return;
+    }
+    
+    try {
+      setLoading(prev => ({ ...prev, activities: true }));
+      
+      // Delete all activities one by one
+      const deletePromises = petData.activities.map(activity => 
+        apiService.deleteActivity(activity.id)
+      );
+      
+      await Promise.all(deletePromises);
+      
+      // Reload data after clearing all
+      await loadData();
+      await checkReminder();
+      
+    } catch (err) {
+      console.error('Error clearing all activities:', err);
+      setError(err.message);
+    } finally {
+      setLoading(prev => ({ ...prev, activities: false }));
+    }
+  };
   const handleChatSubmit = async () => {
     if (!chatInput.trim()) return;
     
@@ -517,10 +565,20 @@ const PetActivityTracker = () => {
           {/* Recent Activities */}
           {petData.activities.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                <Clock className="w-5 h-5 mr-2" />
-                Recent Activities
-              </h2>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg font-semibold text-gray-800 flex items-center">
+                  <Clock className="w-5 h-5 mr-2" />
+                  Recent Activities
+                </h2>
+                <button
+                  onClick={handleClearAllActivities}
+                  disabled={loading.activities}
+                  className="flex items-center space-x-1 px-3 py-1 text-sm text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Clear All</span>
+                </button>
+              </div>
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {loading.activities ? (
                   <div className="flex items-center justify-center py-8">
@@ -532,23 +590,45 @@ const PetActivityTracker = () => {
                     .reverse()
                     .slice(0, 5)
                     .map((activity) => (
-                      <div key={activity.id} className="bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+                      <div key={activity.id} className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 group">
                         <div className="flex justify-between items-center">
-                          <div>
-                            <span className="font-medium capitalize">{activity.type}</span>
-                            <span className="text-gray-600 ml-2">
-                              ({activity.duration} {activity.type === 'walk' ? 'min' : activity.type === 'meal' ? 'portion' : 'dose'})
-                            </span>
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <span className="font-medium capitalize">{activity.type}</span>
+                                <span className="text-gray-600 ml-2">
+                                  ({activity.duration} {activity.type === 'walk' ? 'min' : activity.type === 'meal' ? 'portion' : 'dose'})
+                                </span>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <span className="text-sm text-gray-500">
+                                  {new Date(activity.dateTime).toLocaleDateString()}
+                                </span>
+                                <button
+                                  onClick={() => handleDeleteActivity(activity.id)}
+                                  className="opacity-0 group-hover:opacity-100 p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-all duration-200"
+                                  title="Delete activity"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
+                            <p className="text-sm text-gray-600">{activity.petName}</p>
                           </div>
-                          <span className="text-sm text-gray-500">
-                            {new Date(activity.dateTime).toLocaleDateString()}
-                          </span>
                         </div>
-                        <p className="text-sm text-gray-600">{activity.petName}</p>
                       </div>
                     ))
                 )}
               </div>
+              
+              {/* Show more activities indicator */}
+              {petData.activities.length > 5 && (
+                <div className="text-center mt-2">
+                  <p className="text-sm text-gray-500">
+                    Showing 5 of {petData.activities.length} activities
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>
