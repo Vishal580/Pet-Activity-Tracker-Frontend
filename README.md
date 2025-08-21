@@ -145,3 +145,4 @@ Connects to backend API for:
 **Tech Stack**: React, Tailwind CSS, Lucide Icons  
 **Deployment**: Vercel  
 **Backend**: Connects to Render-hosted Express API# Pet-Activity-Tracker-Frontend
+# Pet-Activity-Tracker-Frontend
