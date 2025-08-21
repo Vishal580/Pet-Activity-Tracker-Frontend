@@ -1,70 +1,147 @@
-# Getting Started with Create React App
+# Pet Activity Tracker - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern **React** web application for tracking pet activities with AI-powered care assistance and beautiful mobile-first design.
 
-## Available Scripts
+## 🐾 Features
 
-In the project directory, you can run:
+- **Activity Logging**: Log walks, meals, medications with instant validation
+- **Visual Analytics**: Progress bars, rings, and daily summaries
+- **AI Chat Assistant**: Context-aware pet care advice
+- **Smart Reminders**: 6 PM walk notifications
+- **Mobile-First**: Responsive design optimized for phones
+- **Real-time Updates**: Live sync with backend API
 
-### `npm start`
+## 📁 Folder Structure
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
+frontend/
+├── public/
+│   ├── index.html           # HTML template
+│   ├── favicon.ico          # App icon
+│   └── manifest.json        # PWA manifest
+├── src/
+│   ├── App.js               # Main React component
+│   ├── index.js             # React entry point
+│   ├── index.css            # Tailwind CSS styles
+│   └── App.test.js          # Component tests
+├── package.json             # Dependencies & scripts
+├── package-lock.json        # Locked dependency versions
+├── tailwind.config.js       # Tailwind configuration
+├── postcss.config.js        # PostCSS configuration
+├── .gitignore              # Git ignore rules
+└── README.md               # This file
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🚀 Quick Start
 
-### `npm test`
+### Local Development
+```bash
+# Install dependencies
+npm install
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Install Tailwind CSS
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
 
-### `npm run build`
+# Start development server
+npm start
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# App runs on http://localhost:3000
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Production Build
+```bash
+npm run build
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🎨 Design System
 
-### `npm run eject`
+- **Colors**: Purple/blue gradients with green accents
+- **Typography**: System font stack for readability
+- **Layout**: Mobile-first responsive grid
+- **Animations**: Smooth transitions and micro-interactions
+- **Icons**: Lucide React icon library
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 📦 Dependencies
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```json
+{
+  "react": "^18.2.0",
+  "react-dom": "^18.2.0",
+  "react-scripts": "^5.0.1",
+  "lucide-react": "^0.263.1",
+  "tailwindcss": "^3.3.0",
+  "autoprefixer": "^10.4.14",
+  "postcss": "^8.4.24"
+}
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🌐 Deployment (Vercel)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Environment Variables
+```env
+REACT_APP_API_URL=https://your-backend-url.onrender.com/api
+```
 
-## Learn More
+### Deploy Steps
+1. Connect GitHub repo to Vercel
+2. Set framework preset: **Create React App**
+3. Set environment variables
+4. Deploy automatically on git push
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Vercel Configuration
+- **Framework Preset**: Create React App
+- **Build Command**: `npm run build`
+- **Output Directory**: `build`
+- **Install Command**: `npm install`
+- **Auto-Deploy**: Yes
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🔧 Scripts
 
-### Code Splitting
+- `npm start` - Development server (port 3000)
+- `npm run build` - Production build
+- `npm test` - Run tests
+- `npm run eject` - Eject from Create React App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 📱 Mobile Features
 
-### Analyzing the Bundle Size
+- **Touch-friendly**: Large tap targets and gestures
+- **Responsive**: Optimized for 320px - 480px screens
+- **Fast Loading**: Optimized assets and code splitting
+- **Offline-ready**: Service worker for caching
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 🎯 Key Components
 
-### Making a Progressive Web App
+### Activity Form
+- Real-time validation
+- Dynamic field labels
+- Auto-complete pet names
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Today's Summary
+- Animated progress indicators
+- Visual data representation
+- Goal tracking (60min walks)
 
-### Advanced Configuration
+### AI Chat Assistant
+- Contextual responses
+- Conversation memory
+- Pet care expertise
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Smart Reminders
+- Time-based notifications
+- Activity-aware alerts
+- Dismissible interface
 
-### Deployment
+## 🔗 API Integration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Connects to backend API for:
+- Activity CRUD operations
+- Daily summary calculations
+- AI chat functionality
+- Walk reminder checks
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Tech Stack**: React, Tailwind CSS, Lucide Icons  
+**Deployment**: Vercel  
+**Backend**: Connects to Render-hosted Express API# Pet-Activity-Tracker-Frontend
